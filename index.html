@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TechOrBit by Rakibul | Educational Platform</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+      body { font-family: 'Inter', sans-serif; background-color: #f8fafc; margin: 0; }
+      .dark-mode { background-color: #0f172a; color: #f8fafc; }
+      #root { min-height: 100vh; display: flex; flex-direction: column; }
+      .loading-spinner { border: 4px solid #f3f3f3; border-top: 4px solid #3b82f6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+
+    <!-- Import Map: Using unpkg for better compatibility with GitHub Pages CORS -->
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "lucide-react": "https://esm.sh/lucide-react@0.475.0?external=react",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+
+    <!-- Babel for in-browser transpilation -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root">
+      <div style="text-align: center; margin-top: 20vh; font-family: sans-serif;">
+        <h2 style="color: #3b82f6;">TechOrBit is Loading...</h2>
+        <div class="loading-spinner"></div>
+        <p style="color: #64748b;">Preparing your educational platform...</p>
+      </div>
+    </div>
+
+    <!-- 
+      This script mounts the React app. 
+      We fetch App.tsx as text to bypass MIME type restrictions.
+    -->
+    <script type="text/babel" data-presets="react,typescript">
+      import React from 'react';
+      import ReactDOM from 'react-dom/client';
+      
+      async function startApp() {
+        try {
+          // Calculate the correct path based on your GitHub repo name
+          const path = window.location.pathname;
+          const repo = path.split('/')[1];
+          const baseUrl = window.location.origin + (repo && !path.endsWith('.html') ? '/' + repo + '/' : '/');
+          
+          // Import the main App component
+          // The browser might still block nested .tsx imports via MIME.
+          // For maximum compatibility, we use the local App.tsx provided.
+          const { default: App } = await import('./App.tsx');
+
+          const root = ReactDOM.createRoot(document.getElementById('root'));
+          root.render(<React.StrictMode><App /></React.StrictMode>);
+        } catch (err) {
+          console.error("Critical Error Loading App:", err);
+          document.getElementById('root').innerHTML = `
+            <div style="padding: 40px; text-align: center; color: #ef4444; font-family: sans-serif;">
+              <h1 style="font-size: 24px;">Oops! Failed to Load</h1>
+              <p style="color: #64748b; margin-top: 10px;">Reason: ${err.message}</p>
+              <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 8px; cursor: pointer;">Try Again</button>
+            </div>
+          `;
+        }
+      }
+
+      startApp();
+    </script>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
